@@ -1,14 +1,14 @@
 import React , {useEffect} from 'react';
 import { Link , useLocation } from 'react-router-dom'; // Use Link for React Router navigation
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
-import '../css/Navbar.css';
+
 
 
 const Navbar = () => {
   const location = useLocation();
-  useEffect(() => {
-    console.log(location.pathname)
-   }, [location]);
+  // useEffect(() => {
+  //   console.log(location.pathname)
+  //  }, [location]);
    
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -32,6 +32,9 @@ const Navbar = () => {
             </li>
             <li className="nav-item">
               <Link className={`nav-link ${location.pathname === "/about" ? "active":""} `} to="/about">About</Link>
+            </li>
+            <li className="nav-item">
+              <Link className={`nav-link ${location.pathname === "/notes" ? "active":""} `} to="/notes">Notes</Link>
             </li>
             <li className="nav-item">
               <Link className={`nav-link ${location.pathname === "/contact" ? "active":""} `} to="/contact">Contact Us</Link>

@@ -7,6 +7,7 @@ import About from './components/About';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import NoteState from './context/notes/notestate';
+import Notes from './components/Notes';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/notes" element={<Notes/>} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>

@@ -4,12 +4,10 @@ import NoteState from '../context/notes/notecontext'
 
 const Contact = () => {
 
-
-
   return (
-    <div>
-      Hello from Contact page 
-    </div>
+   <div>
+    this is contact page
+   </div>
   )
 }
 

@@ -85,7 +85,7 @@ router.post('/loginuser',[
                 id:user.id,
                 }
                 }
-                const auth_token = jwt.sign(data, process.env.JWT_SERECT);
+                const auth_token = jwt.sign(data,JWT_SERECT);
                 res.status(200).json({message:"User logged in successfully",token:auth_token})
                 }catch(error){
                     console.error(error.message)

@@ -19,5 +19,5 @@ app.use('/api/auth', authRoutes)
 app.use('/api/notes', notesRoutes)
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`iNotebook backend running at http://localhost:${port}`);
 });
