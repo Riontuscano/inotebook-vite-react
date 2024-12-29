@@ -1,43 +1,29 @@
-import React , {useEffect} from 'react';
-import { Link , useLocation } from 'react-router-dom'; // Use Link for React Router navigation
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
-
-
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import NotesDropdown from './Dropdown';
 
 const Navbar = () => {
   const location = useLocation();
-  // useEffect(() => {
-  //   console.log(location.pathname)
-  //  }, [location]);
-   
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">iNotebook</Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className={`nav-link ${location.pathname === "/" ? "active":""} `} aria-current="page" to="/">Home</Link>
+              <Link className={`nav-link ${location.pathname === "/" ? "active" : ""}`} aria-current="page" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link ${location.pathname === "/about" ? "active":""} `} to="/about">About</Link>
+              <Link className={`nav-link ${location.pathname === "/about" ? "active" : ""}`} to="/about">About</Link>
             </li>
+            <NotesDropdown />
             <li className="nav-item">
-              <Link className={`nav-link ${location.pathname === "/notes" ? "active":""} `} to="/notes">Notes</Link>
-            </li>
-            <li className="nav-item">
-              <Link className={`nav-link ${location.pathname === "/contact" ? "active":""} `} to="/contact">Contact Us</Link>
+              <Link className={`nav-link ${location.pathname === "/contact" ? "active" : ""}`} to="/contact">Contact Us</Link>
             </li>
           </ul>
           <form className="d-flex" role="search">

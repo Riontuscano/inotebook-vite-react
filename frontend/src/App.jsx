@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/Navbar';
@@ -8,9 +8,21 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import NoteState from './context/notes/notestate';
 import Notes from './components/Notes';
+import Addnote from './components/Addnote';
+import Archivenote from './components/Archivenote';
 
+const App = () => {
+const [alert,setAlert] = useState(null);
+  const showAlert=(message,type)=>{
+    setAlert({
+      msg:message,
+      tp:type
+    });
+setTimeout(()=>{
+  setAlert(null);
+},3000)
+}
 
-function App() {
   return (
     <>
     <NoteState>
@@ -20,13 +32,16 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/notes" element={<Notes/>} />
+          <Route path="/notes" element={<Notes showAlert={showAlert}/>} />
+          <Route path="/notes/create" element={<Addnote showAlert={showAlert}/>} />
+          <Route path="/notes/archive" element={<Archivenote showAlert={showAlert}/>} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>
         <Footer/>
     </Router>
     </NoteState>
+   
     </>
   );
 }

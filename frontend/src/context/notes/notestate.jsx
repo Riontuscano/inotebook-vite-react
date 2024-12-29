@@ -2,6 +2,7 @@ import NoteContext from "./notecontext";
 import { useState } from "react";
 
 const NoteState = (props) => {
+  const [count, setCount] = useState(0);
    const noteinitial = [
     {
       "_id": "676018e5b360412c3467d948",
@@ -40,10 +41,38 @@ const NoteState = (props) => {
       "__v": 0
     }
   ]
-      
+  // Add a note 
+const addNote = (formData) =>{
+
+const currentDate = new Date();
+const isoDate = currentDate.toISOString();
+
+  
+  setCount((prevCount) => prevCount + 1);
+  const note = {
+    "_id": `676fda813d96d6085220185e${count}`,
+    "user": "675ed975603e70b029f300f5",
+    "title": formData.title,
+    "description": formData.description,
+    "tag": formData.tag,
+    "timeStamp": isoDate,
+    "__v": 0
+  }
+
+  setNotes(noteinitial.concat(note))
+
+}
+  //Edit a note
+const editNote = () =>{
+  
+}
+  //Delete a note
+  const deleteNote = () =>{
+  
+  }     
     const [notes, setNotes] = useState(noteinitial);
 return(
-    <NoteContext.Provider value={{notes,setNotes}}>
+    <NoteContext.Provider value={{notes,addNote,editNote,deleteNote}}>
         {props.children}
     </NoteContext.Provider>
 )}
