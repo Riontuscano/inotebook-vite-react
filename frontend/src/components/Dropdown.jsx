@@ -26,8 +26,9 @@ const NotesDropdown = () => {
       </Link>
       {isOpen && (
         <div className="dropdown-menu show" style={{position: 'absolute'}}>
-          <Link className="dropdown-item" to="/notes/create">Create Note</Link>
-          <Link className="dropdown-item" to="/notes/archive">Archived</Link>
+          <Link className={`dropdown-item ${location.pathname === "/notes" ? "disabled" : ""}`} to="/notes">All notes</Link>
+          <Link className={`dropdown-item ${location.pathname === "/notes/create" ? "disabled" : ""}`} to="/notes/create">Create Note</Link>
+          <Link className={`dropdown-item ${location.pathname === "/notes/archive" ? "disabled" : ""}`} to="/notes/archive">Archived</Link>
         </div>
       )}
     </li>

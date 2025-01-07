@@ -40,13 +40,26 @@ router.get('/fetchallnotes', fetchuser, async (req, res) => {
   
     const notes = await Notes.find({ user: req.user.id });
 
-    res.json({ notes });
+    res.json(notes);
   } catch (error) {
     console.error("Error fetching notes:", error.message);
     res.status(500).send("Internal Server Error");
   }
 });
 
+router.get('/fetchnote/:id', fetchuser, async (req, res) => {
+  try {
+    const noteId = req.params.id;
+    const note = await Notes.findById(noteId).select("-password");
+    if (!note) {
+      return res.status(404).json({ message: "Note not found" });
+      }
+      res.json(note);
+      } catch (error) {
+        console.error("Error fetching note:", error.message);
+        res.status(500).send("Internal Server Error");
+        }
+        });
 
 router.put('/updatenote/:id',fetchuser,[
   body('title', 'Enter a valid title').isLength({ min: 3 }),
@@ -81,22 +94,7 @@ router.put('/updatenote/:id',fetchuser,[
     }
 })
 
-router.get('/fetchallnotes', fetchuser, async (req, res) => {
-  try {
-  
-    const notes = await Notes.find({ user: req.user.id });
-
-    res.json({ notes });
-  } catch (error) {
-    console.error("Error fetching notes:", error.message);
-    res.status(500).send("Internal Server Error");
-  }
-});
- 
-router.delete('/deletenote/:id',fetchuser,[
-  body('title', 'Enter a valid title').isLength({ min: 3 }),
-  body('description', 'Description must be at least 5 characters').isLength({ min: 5 }),
-],async (req,res)=>{
+router.delete('/deletenote/:id',fetchuser,async (req,res)=>{
   //find the note
 
   let note = await Notes.findById(req.params.id)

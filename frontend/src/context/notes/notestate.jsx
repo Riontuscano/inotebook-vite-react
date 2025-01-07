@@ -2,78 +2,136 @@ import NoteContext from "./notecontext";
 import { useState } from "react";
 
 const NoteState = (props) => {
+  const host = "http://localhost:5500";
   const [count, setCount] = useState(0);
-   const noteinitial = [
-    {
-      "_id": "676018e5b360412c3467d948",
-      "user": "675ed975603e70b029f300f5",
-      "title": "New note",
-      "description": "second note ",
-      "tag": "personal",
-      "timeStamp": "2024-12-16T12:11:17.246Z",
-      "__v": 0
-    },
-    {
-      "_id": "6761770fb40776bfac087162",
-      "user": "675ed975603e70b029f300f5",
-      "title": "My third push updated ",
-      "description": "Hello my name is rion updated with out hello",
-      "tag": "personal",
-      "timeStamp": "2024-12-17T13:05:19.599Z",
-      "__v": 0
-    },
-    {
-      "_id": "67617764d312e3b91fc95def",
-      "user": "675ed975603e70b029f300f5",
-      "title": "My third push ",
-      "description": "Hello my name is rion",
-      "tag": "personal",
-      "timeStamp": "2024-12-17T13:06:44.650Z",
-      "__v": 0
-    },
-    {
-      "_id": "676fda813d96d6085220185e",
-      "user": "675ed975603e70b029f300f5",
-      "title": "My 4th push ",
-      "description": "Hello my name is rion for the 4th time",
-      "tag": "public",
-      "timeStamp": "2024-12-28T11:01:21.744Z",
-      "__v": 0
-    }
-  ]
-  // Add a note 
-const addNote = (formData) =>{
+  const noteinitial = []
+  const [notes, setNotes] = useState(noteinitial);
+  const [nude, setNude ]= useState({
+    title: "",
+    description: "",
+    tag: "personal",
+  })
 
-const currentDate = new Date();
-const isoDate = currentDate.toISOString();
-
-  
-  setCount((prevCount) => prevCount + 1);
-  const note = {
-    "_id": `676fda813d96d6085220185e${count}`,
-    "user": "675ed975603e70b029f300f5",
-    "title": formData.title,
-    "description": formData.description,
-    "tag": formData.tag,
-    "timeStamp": isoDate,
-    "__v": 0
+  // Fetch all notes
+  const fetchNotes = async () => {
+    const response = await fetch(`${host}/api/notes/fetchallnotes`, {
+      method: "GET",
+      headers: {
+        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc1ZWQ5NzU2MDNlNzBiMDI5ZjMwMGY1In0sImlhdCI6MTczNDI2OTMyMH0.HPA3DodG2tBL8Ij5h6sCmrm6Hk-F-K4RbCgjeiS0FlM",
+      },
+    })
+      .catch((error) => {
+        console.error("Error creating post:", error);
+      });
+     const json = await response.json();
+     setNotes(json)
+     
   }
+  const fetchOneNote = async (updateId) => {
+    const response = await fetch(`${host}/api/notes/fetchnote/${updateId}`, {
+      method: "GET",
+      headers: {
+        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc1ZWQ5NzU2MDNlNzBiMDI5ZjMwMGY1In0sImlhdCI6MTczNDI2OTMyMH0.HPA3DodG2tBL8Ij5h6sCmrm6Hk-F-K4RbCgjeiS0FlM",
+        },
+        })
+        .catch((error) => {
+          console.error("Error creating post:", error);
+          });
+          const json = await response.json();
+          setNude(json)
+          }
+  // Add a note
+  const addNote = async (formData) => {
+    //for server
+    const response = await fetch(`${host}/api/notes/addnewnotes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc1ZWQ5NzU2MDNlNzBiMDI5ZjMwMGY1In0sImlhdCI6MTczNDI2OTMyMH0.HPA3DodG2tBL8Ij5h6sCmrm6Hk-F-K4RbCgjeiS0FlM",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        console.log(response.json());
+        
+      })
+      .catch((error) => {
+        console.error("Error creating post:", error);
+      });
 
-  setNotes(noteinitial.concat(note))
+     
+    //for client
+    const currentDate = new Date();
+    const isoDate = currentDate.toISOString();
 
-}
+    setCount((prevCount) => prevCount + 1);
+    const note = {
+      _id: `676fda813d96d6085220185e${count}`,
+      user: "675ed975603e70b029f300f5",
+      title: formData.title,
+      description: formData.description,
+      tag: formData.tag,
+      timeStamp: isoDate,
+      __v: 0,
+    };
+
+    setNotes(noteinitial.concat(note));
+    fetchNotes()
+  };
   //Edit a note
-const editNote = () =>{
-  
-}
+  const editNote = async (id, title, description, tag) => {
+    // for server
+    const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc1ZWQ5NzU2MDNlNzBiMDI5ZjMwMGY1In0sImlhdCI6MTczNDI2OTMyMH0.HPA3DodG2tBL8Ij5h6sCmrm6Hk-F-K4RbCgjeiS0FlM",
+      },
+      body: JSON.stringify({title,description,tag}),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      })
+      .catch((error) => {
+        console.error("Error creating post:", error);
+      });
+const json = await response.json();
+    // for client
+    let newNotes = JSON.parse(JSON.stringify(notes))
+    for (let index = 0; index < newNotes.length; index++) {
+      if (newNotes[index]._id === id) {
+        newNotes[index].title = title;
+        newNotes[index].description = description;
+        newNotes[index].tag = tag;
+        break;
+      }
+    }
+    setNotes(newNotes);
+  };
   //Delete a note
-  const deleteNote = () =>{
-  
-  }     
-    const [notes, setNotes] = useState(noteinitial);
-return(
-    <NoteContext.Provider value={{notes,addNote,editNote,deleteNote}}>
-        {props.children}
+  const deleteNote = async (noteId) => {
+    const response = await fetch(`${host}/api/notes/deletenote/${noteId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc1ZWQ5NzU2MDNlNzBiMDI5ZjMwMGY1In0sImlhdCI6MTczNDI2OTMyMH0.HPA3DodG2tBL8Ij5h6sCmrm6Hk-F-K4RbCgjeiS0FlM",
+      },
+    })
+      .catch((error) => {
+        console.error("Error creating post:", error);
+      }); 
+      const json = response.json()
+      fetchNotes()
+    }
+  return (
+    <NoteContext.Provider value={{ nude,notes, addNote, editNote, deleteNote,fetchNotes,fetchOneNote}}>
+      {props.children}
     </NoteContext.Provider>
-)}
+  );
+};
 export default NoteState;
