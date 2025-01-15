@@ -15,7 +15,7 @@ const AboutPage = () => {
           {/* Header Section */}
           <div className="text-center mb-8">
             <img 
-              src="https://avatar.iran.liara.run/public/boy"
+              src={`https://avatar.iran.liara.run/public/boy?username=rio`}
               alt="Profile"
               className="rounded-full mx-auto mb-4 border-4 border-blue-500"
             />

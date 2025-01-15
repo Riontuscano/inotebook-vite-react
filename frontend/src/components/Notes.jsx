@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import NoteState from '../context/notes/notecontext'
 import NoteItem from './Noteitem'
-import '../css/Notes.css';
 
 const Notes = () => {
   const [formData, setFormData] = useState({
@@ -98,7 +97,7 @@ const Notes = () => {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleSubmit}>Save changes</button>
+                <button disabled={formData.title.length < 5 || formData.description.length < 5} type="submit" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleSubmit}>Save changes</button>
             </div>
           </div>
         </div>
@@ -107,6 +106,7 @@ const Notes = () => {
       {/* Notes display */}
       <div className='row m-3'>
         <h2>Your Notes</h2>
+        {notes.length === 0 && <h2>No notes yet! Create one above.😘 </h2>}
         {notes.map((note) => (
           <NoteItem key={note._id} updateNote={() => updateNote(note)} note={note} />
         ))}

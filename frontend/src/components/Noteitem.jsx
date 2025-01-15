@@ -1,15 +1,14 @@
-import React, { useContext } from "react";
-import NoteState from '../context/notes/notecontext'
-
-// import 'boxicons';
-
+import React, { useContext, useState } from "react";
+import NoteState from "../context/notes/notecontext";
 
 const Noteitem = (props) => {
   const context = useContext(NoteState);
-  const { confirmDelete,deleteNote ,fetchOneNote } = context;
+  const { deleteNote, fetchOneNote } = context;
   const { note, updateNote } = props;
   const inputTime = new Date(note.timeStamp);
 
+  // State to manage which note is selected for deletion
+  const [selectedNoteId, setSelectedNoteId] = useState(null);
 
   const timeAgo = (date) => {
     const now = new Date();
@@ -26,44 +25,86 @@ const Noteitem = (props) => {
     if (hours < 24) return `${hours} hours ago`;
     if (days < 7) return `${days} days ago`;
     return `${weeks} weeks ago`;
-  }
+  };
 
+  const handleDelete = () => {
+    if (selectedNoteId) {
+      deleteNote(selectedNoteId); // Delete the selected note
+      setSelectedNoteId(null); // Clear the selected note ID after deletion
+    }
+  };
 
   return (
     <>
-    <div className="holder col-md-4 mt-4">
-      <div className="modal fade" id="exampleModalNoteItem" data-bs-backdrop="static" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">Deletion Alert!!</h1>
-              {/* <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> */}
-            </div>
-            <div className="modal-body">
-              Are you sure you want to delete this note , Once deleted will not be recoverable 
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => confirmDelete(false)}>Close</button>
-              <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => confirmDelete(true)}>
-              Yes,I do</button>
+      <div className="holder col-md-4 mt-4">
+        {/* Modal */}
+        <div
+          className="modal fade"
+          id={`modal-${note._id}`} // Unique ID for each modal
+          tabIndex="-1"
+          aria-labelledby={`modal-label-${note._id}`}
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1 className="modal-title fs-5" id={`modal-label-${note._id}`}>
+                  Deletion Alert!!
+                </h1>
+              </div>
+              <div className="modal-body">
+                Are you sure you want to delete this note? Once deleted, it will not be recoverable.
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                  onClick={() => setSelectedNoteId(null)}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  data-bs-dismiss="modal"
+                  onClick={handleDelete}
+                >
+                  Yes, I do
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className="card" style={{ width: "18rem" }}>
-        <div className="card-body">
-          <h5 className="card-title">{note.title}</h5>
-          <h6 className="card-subtitle mb-2 text-body-secondary">{note.tag}</h6>
-          <p className="card-text">
-            {note.description}
-          </p>
-          <h6 className="card-subtitle mb-2 text-body-secondary">{timeAgo(inputTime)}</h6>
-          <i className='bx bx-edit mx-2' onClick={() => {fetchOneNote(note._id); updateNote(note._id)}}></i>
-          <i className='bx bx-trash'  onClick={()=>{deleteNote(note._id)}}></i>
-          {/* data-bs-toggle="modal" data-bs-target="#exampleModalNoteItem" */}
+
+        {/* Note Card */}
+        <div className="card" style={{ width: "18rem" }}>
+          <div className="card-body">
+            <h5 className="card-title">{note.title}</h5>
+            <h6 className="card-subtitle mb-2 text-body-secondary">{note.tag}</h6>
+            <p className="card-text">{note.description}</p>
+            <h6 className="card-subtitle mb-2 text-body-secondary">
+              {timeAgo(inputTime)}
+            </h6>
+            <i
+              className="bx bx-edit mx-2"
+              onClick={() => {
+                fetchOneNote(note._id);
+                updateNote(note._id);
+              }}
+            ></i>
+            <i
+              className="bx bx-trash"
+              data-bs-toggle="modal"
+              data-bs-target={`#modal-${note._id}`} // Target the correct modal
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent unwanted events
+                setSelectedNoteId(note._id); // Set the note ID for deletion
+              }}
+            ></i>
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 };

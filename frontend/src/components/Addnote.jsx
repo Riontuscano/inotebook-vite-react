@@ -71,7 +71,7 @@ const Form = () => {
             required
           />
         </div>
-        <button type="submit" className="submit-button" onClick={handleClick}>
+        <button type="submit" className="btn btn-primary" onClick={handleClick} disabled={formData.title.length < 5 || formData.description.length < 5}>
           Save Note
         </button>
       </form>

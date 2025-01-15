@@ -3,7 +3,6 @@ import { useState } from "react";
 
 const NoteState = (props) => {
   const host = "http://localhost:5500";
-  const [count, setCount] = useState(0);
   const noteinitial = []
   const [notes, setNotes] = useState(noteinitial);
   const [nude, setNude ]= useState({
@@ -64,20 +63,9 @@ const NoteState = (props) => {
 
      
     //for client
-    const currentDate = new Date();
-    const isoDate = currentDate.toISOString();
-
-    setCount((prevCount) => prevCount + 1);
-    const note = {
-      _id: `676fda813d96d6085220185e${count}`,
-      user: "675ed975603e70b029f300f5",
-      title: formData.title,
-      description: formData.description,
-      tag: formData.tag,
-      timeStamp: isoDate,
-      __v: 0,
-    };
-
+  
+    const note = await response.json()
+    
     setNotes(noteinitial.concat(note));
     fetchNotes()
   };
@@ -100,7 +88,7 @@ const NoteState = (props) => {
       .catch((error) => {
         console.error("Error creating post:", error);
       });
-const json = await response.json();
+
     // for client
     let newNotes = JSON.parse(JSON.stringify(notes))
     for (let index = 0; index < newNotes.length; index++) {
@@ -125,7 +113,6 @@ const json = await response.json();
       .catch((error) => {
         console.error("Error creating post:", error);
       }); 
-      const json = response.json()
       fetchNotes()
     }
   return (

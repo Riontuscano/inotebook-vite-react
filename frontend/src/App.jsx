@@ -7,9 +7,12 @@ import About from './components/About';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import NoteState from './context/notes/notestate';
+import AuthState from './context/auth/authstate';
 import Notes from './components/Notes';
 import Addnote from './components/Addnote';
 import Archivenote from './components/Archivenote';
+import Authway from './pages/Authway';
+
 
 const App = () => {
 const [alert,setAlert] = useState(null);
@@ -25,6 +28,7 @@ setTimeout(()=>{
 
   return (
     <>
+    <AuthState>
     <NoteState>
     <Router>
       <Navbar />
@@ -36,11 +40,13 @@ setTimeout(()=>{
           <Route path="/notes/create" element={<Addnote showAlert={showAlert}/>} />
           <Route path="/notes/archive" element={<Archivenote showAlert={showAlert}/>} />
           <Route path="/contact" element={<Contact />} />
+          <Route path='/Authway' element={<Authway/>}/>
         </Routes>
       </div>
         <Footer/>
     </Router>
     </NoteState>
+    </AuthState>
    
     </>
   );

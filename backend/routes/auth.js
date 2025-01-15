@@ -79,14 +79,17 @@ router.post('/loginuser',[
             return res.status(400).json({error:"Invalid credentials"})
         const isMatch = await bcrypt.compare(password,user.password)
         if(!isMatch)
-            return res.status(400).json({error:"Invalid credentials"})
+            return res.status(401).json({error:"Invalid credentials"})
         const data = {
             user:{
                 id:user.id,
                 }
                 }
-                const auth_token = jwt.sign(data,JWT_SERECT);
-                res.status(200).json({message:"User logged in successfully",token:auth_token})
+                const auth_token = jwt.sign(data, JWT_SERECT);
+                res.status(200).json({
+                    "success": true,
+                    "icon": user.name
+                  })
                 }catch(error){
                     console.error(error.message)
                     res.status(500).send("Some error occurred")
