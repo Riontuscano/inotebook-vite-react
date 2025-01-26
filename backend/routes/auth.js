@@ -9,7 +9,6 @@ import fetchuser from '../middleware/fetchuser.js';
 dotenv.config()
 
 const JWT_SERECT = "Ujt!gf87$JH@Nm4l12#FdSpfafa3455@@!4##@";
-
 const router = express.Router();
 //api/auth/createuser
 
@@ -25,22 +24,23 @@ router.post('/createuser',[
     .isEmail()
     .normalizeEmail(),
 ], async (req, res) => {
+    let success = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
-        return res.status(400).json({errors:errors.array()})
+        return res.status(400).json({success:success,errors:errors.array()})
     }
     try{
     let user = await User.findOne({email:req.body.email})
-    
     if(user)
-        return res.status(400).json({error:"User already exits"})
+        return res.status(400).json({success:success,errors:"User already exits"})
 
     const salt  = await bcrypt.genSalt(10)
     const secPass = await bcrypt.hash(req.body.password,salt) 
-   const person = await User.create({
-        name:req.body.name,
+    const person = await User.create({
+        name:req.body.userName,
         email:req.body.email,
-        password:secPass
+        password:secPass,
+        profilepic:req.body.gender == 'male' ? `https://avatar.iran.liara.run/public/boy?username=${req.body.userName}` : `https://avatar.iran.liara.run/public/girl?username=${req.body.userName}` 
     });
     const data = {
         user:{
@@ -49,7 +49,7 @@ router.post('/createuser',[
     }
     const auth_token = jwt.sign(data,JWT_SERECT);
 
-    res.status(201).json({message:"User created successfully",token:auth_token})
+    res.status(201).json({success:true,message:"User created successfully",token:auth_token})
 }catch(error){
     console.error(error.message)
     res.status(500).send("Some error occurred")
@@ -68,6 +68,7 @@ router.post('/loginuser',[
     .isEmail()
     .normalizeEmail(),
 ], async (req, res) => {
+    let success = false
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors:errors.array()})
@@ -76,10 +77,10 @@ router.post('/loginuser',[
     try{
         const user = await User.findOne({email:email})
         if(!user)
-            return res.status(400).json({error:"Invalid credentials"})
+            return res.status(401).json({success,error:"Invalid credentials"})
         const isMatch = await bcrypt.compare(password,user.password)
         if(!isMatch)
-            return res.status(401).json({error:"Invalid credentials"})
+            return res.status(401).json({success,error:"Invalid credentials"})
         const data = {
             user:{
                 id:user.id,
@@ -87,13 +88,18 @@ router.post('/loginuser',[
                 }
                 const auth_token = jwt.sign(data, JWT_SERECT);
                 res.status(200).json({
+                    "uname":user.name,
                     "success": true,
-                    "icon": user.name
+                    "icon": user.profilepic,
+                    "authtoken":auth_token
                   })
+                  
                 }catch(error){
                     console.error(error.message)
                     res.status(500).send("Some error occurred")
                     }
+              
+                    
 });
 
 

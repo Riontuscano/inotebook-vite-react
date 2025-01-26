@@ -1,50 +1,120 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from React Router
+import { useNavigate } from 'react-router-dom';
 import authContext from '../context/auth/authcontext';
 
-const AuthForm = () => {
-  const context = useContext(authContext);
-  const { loginUser } = context;
+const PasswordValidation = ({ password }) => {
+  const validationRules = [
+    { 
+      text: 'At least 8 characters', 
+      check: (pw) => pw.length >= 8 
+    },
+    { 
+      text: 'Contains uppercase letter', 
+      check: (pw) => /[A-Z]/.test(pw) 
+    },
+    { 
+      text: 'Contains lowercase letter', 
+      check: (pw) => /[a-z]/.test(pw) 
+    },
+    { 
+      text: 'Contains a number', 
+      check: (pw) => /[0-9]/.test(pw) 
+    }
+  ];
 
-  const navigate = useNavigate(); // Initialize useNavigate for navigation
+  return (
+    <div className="password-validation mb-3">
+      {validationRules.map((rule, index) => (
+        <div 
+          key={index} 
+          className="d-flex align-items-center"
+        >
+          {rule.check(password) ? (
+            <span className="text-success me-2">✓</span>
+          ) : (
+            <span className="text-danger me-2">✗</span>
+          )}
+          <small 
+            className={`${rule.check(password) ? 'text-success' : 'text-muted'}`}
+          >
+            {rule.text}
+          </small>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const AuthForm = (props) => {
+  const context = useContext(authContext);
+  const { loginUser, signupUser } = context;
+
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     confirmPassword: '',
-    userName: ''
+    userName: '',
+    gender: ''
   });
 
   const handleLoginToggle = () => {
     setIsLogin(!isLogin);
   };
 
+  const validatePassword = (password) => {
+    const lengthCheck = password.length >= 8;
+    const uppercaseCheck = /[A-Z]/.test(password);
+    const lowercaseCheck = /[a-z]/.test(password);
+    const digitCheck = /[0-9]/.test(password);
+
+    return lengthCheck && uppercaseCheck && lowercaseCheck && digitCheck;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (isLogin) {
-      // Extract email and password for login
       const { email, password } = formData;
-  
-      // Pass email and password to loginUser function
       const loginSuccess = await loginUser({ email, password });
-  
-      // If login is successful, navigate to the Home component
       if (loginSuccess) {
-        navigate('/notes'); // Redirect to the '/notes' route
+        const name = localStorage.getItem('name')
+        props.showAlert(`Login Successfull !! Welcome ${name}`,"success")
+        navigate('/notes');
       }
     } else {
-      console.log('Sign Up Data:', formData);
-      // Handle sign-up logic here
+      const { email, password, userName, confirmPassword, gender } = formData;
+
+      if (confirmPassword !== password) {
+        props.showAlert("Passwords doesn't match","danger")
+        return;
+      }
+
+      if (!validatePassword(password)) {
+        props.showAlert("Password is not strong enough","warning")
+        return;
+      }
+
+      const registerSuccess = await signupUser({ email, password, userName, gender });
+      if (registerSuccess) {
+        // console.log(registerSuccess);        
+        props.showAlert("Account create Successfully","success")
+        setIsLogin(true)
+      }
     }
   };
-  
 
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -71,6 +141,7 @@ const AuthForm = () => {
                     />
                   </div>
                 )}
+                
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label">Email address</label>
                   <input
@@ -84,19 +155,49 @@ const AuthForm = () => {
                     required
                   />
                 </div>
+                
+                {!isLogin && (
+                  <div className="mb-3">
+                    <label htmlFor="gender" className="form-label">Gender</label>
+                    <select
+                      className="form-control"
+                      id="gender"
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </select>
+                  </div>
+                )}
 
                 <div className="mb-3">
                   <label htmlFor="password" className="form-label">Password</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    placeholder="Password"
-                    required
-                  />
+                  <div className="input-group">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      className="form-control"
+                      id="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      placeholder="Password"
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={togglePasswordVisibility}
+                    >
+                      {showPassword ? 'Hide' : 'Show'}
+                    </button>
+                  </div>
+                  {!isLogin && (
+                    <PasswordValidation password={formData.password} />
+                  )}
                 </div>
 
                 {!isLogin && (
@@ -114,7 +215,7 @@ const AuthForm = () => {
                     />
                   </div>
                 )}
-
+                
                 <button type="submit" className="btn btn-primary w-100 mb-3">
                   {isLogin ? 'Login' : 'Sign Up'}
                 </button>

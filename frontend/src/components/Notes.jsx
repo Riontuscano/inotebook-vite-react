@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import NoteState from '../context/notes/notecontext'
 import NoteItem from './Noteitem'
 
-const Notes = () => {
+const Notes = (props) => {
   const [formData, setFormData] = useState({
     id:"",
     title: "",
@@ -10,7 +10,7 @@ const Notes = () => {
     tag: "personal",
   });
 
-  const { notes, fetchNotes, editNote } = useContext(NoteState); // Assuming 'addNote' is defined in your context.
+  const { notes, fetchNotes, editNote } = useContext(NoteState); 
 
   useEffect(() => {
     fetchNotes();
@@ -25,7 +25,7 @@ const Notes = () => {
       title: note.title,
       description: note.description,
       tag: note.tag,
-    }); // Populate the form with the current note.
+    }); 
   };
 
   const handleChange = (e) => {
@@ -38,16 +38,14 @@ const Notes = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    editNote(formData.id,formData.title,formData.description,formData.tag); // Save changes or add the note.
+    props.showAlert("Note Updated Successfully","success")
+    editNote(formData.id,formData.title,formData.description,formData.tag); 
   };
 
   return (
     <>
-      {/* Hidden button to trigger the modal */}
       <button type="button" ref={ref} className="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
       </button>
-
-      {/* Modal for editing the note */}
       <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
@@ -103,7 +101,6 @@ const Notes = () => {
         </div>
       </div>
 
-      {/* Notes display */}
       <div className='row m-3'>
         <h2>Your Notes</h2>
         {notes.length === 0 && <h2>No notes yet! Create one above.😘 </h2>}

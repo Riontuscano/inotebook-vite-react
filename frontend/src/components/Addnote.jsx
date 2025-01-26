@@ -3,7 +3,7 @@ import "../css/form.css";
 import NoteContext from '../context/notes/notecontext'
 
 
-const Form = () => {
+const Form = (props) => {
 
 
   const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ const Form = () => {
 
   const handleClick = () =>{
      addNote(formData)
+     props.showAlert("Note Created Successfully","success")
     }
     
   const handleChange = (e) => {

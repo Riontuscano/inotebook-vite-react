@@ -3,11 +3,11 @@ import '../css/LoginDropdown.css';
 import AuthContext from '../context/auth/authcontext.jsx';
 import { Link } from 'react-router-dom';
 
-const ProfileDropdown = () => {
+const ProfileDropdown = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const timeoutRef = React.useRef();
-  const { icon, mangeIcon } = useContext(AuthContext); // Get icon from context
+  const timeoutRef = useRef();
+  const { icon, mangeIcon } = useContext(AuthContext);
 
   const handleMouseEnter = () => {
     clearTimeout(timeoutRef.current);
@@ -24,7 +24,6 @@ const ProfileDropdown = () => {
     setIsOpen(false);
   };
 
-  // Click outside to close
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -46,7 +45,7 @@ const ProfileDropdown = () => {
         onMouseLeave={handleMouseLeave}
       >
         <img
-          src={icon ? `https://avatar.iran.liara.run/public/boy?username=${icon}` : '/user.png'} // Use the icon state
+          src={icon ? icon : '/user.png'} 
           alt="Profile"
           className="profile-image"
         />
@@ -62,10 +61,7 @@ const ProfileDropdown = () => {
             <>
               <div className="dropdown-container d-flex">
                 <Link to="/authway" className="dropdown-item">
-                  <button
-                    onClick={() => mangeIcon('dummy')} // Temporary icon value
-                    className="dropdown-item"
-                  >
+                  <button className="dropdown-item">
                     Login
                   </button>
                 </Link>
@@ -89,23 +85,43 @@ const ProfileDropdown = () => {
               </div>
             </>
           ) : (
-            <div className="dropdown-container d-flex">
-              <button
-                onClick={() => {
-                  mangeIcon(null); // Clear the icon on logout
-                }}
-                className="dropdown-item"
-              >
-                Logout
-              </button>
-              <i
-                style={{
-                  color: "red",
-                  margin: "10px",
-                }}
-                className="bx bx-log-out"
-              ></i>
-            </div>
+            <>
+              {/* <div className="dropdown-container d-flex">
+                <Link to="/profile" className="dropdown-item">
+                  <button className="dropdown-item">
+                    Profile
+                  </button>
+                </Link>
+                <i
+                  style={{
+                    color: "blue",
+                    margin: "10px",
+                  }}
+                  className="bx bx-user"
+                ></i>
+              </div> */}
+              <div className="dropdown-container d-flex">
+                <button
+                  onClick={() => {
+                    mangeIcon(null);
+                    props.showAlert(`Logout Successfully Done`,"success")
+                    localStorage.removeItem("icon"); 
+                    localStorage.removeItem("authtoken");
+                    localStorage.removeItem("name");
+                  }}
+                  className="dropdown-item"
+                >
+                  Logout
+                </button>
+                <i
+                  style={{
+                    color: "red",
+                    margin: "10px",
+                  }}
+                  className="bx bx-log-out"
+                ></i>
+              </div>
+            </>
           )}
         </div>
       )}

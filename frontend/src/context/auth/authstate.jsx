@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AuthContext from "./authcontext";
 
 const AuthState = (props) => {
-  const [icon, setIcon] = useState(null); // Store the icon URL
+  const [icon, setIcon] = useState(() => {
+    // Initialize icon state from localStorage if available
+    const savedIcon = localStorage.getItem("icon");
+    return savedIcon ? savedIcon : null;
+  });
+
   const host = "http://localhost:5500";
 
   const mangeIcon = (newIcon) => {
-    setIcon(newIcon); // Update the icon state
+    setIcon(newIcon);
+    localStorage.setItem("icon", newIcon); // Persist icon to localStorage
   };
 
   const loginUser = async ({ email, password }) => {
@@ -21,23 +27,55 @@ const AuthState = (props) => {
 
       const data = await response.json();
 
-      // Check if the response indicates successful login
       if (data.success) {
-        mangeIcon(data.icon); // Update the icon when login is successful
+        mangeIcon(data.icon);
+        localStorage.setItem("authtoken", data.authtoken); // Save token to localStorage
+        localStorage.setItem("name", data.uname); // Save token to localStorage
         return true;
       } else {
-        alert(data.message || "Invalid credentials");
+        alert(data.error || "Invalid credentials");
         return false;
       }
     } catch (error) {
-      console.log("Some Error occurred:", error);
+      console.log("Some Error occurred in login:", error);
       alert("An error occurred. Please try again.");
       return false;
     }
   };
 
+  const signupUser = async ({ email, password, userName, gender }) => {
+    try {
+      const response = await fetch(`${host}/api/auth/createuser`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, userName, gender }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert(data.message);
+        return true;
+      } else {
+        alert(data.errors || "Invalid credentials");
+        return false;
+      }
+    } catch (error) {
+      console.log("Some Error occurred in signup:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Rehydrate icon state on component mount
+    const savedIcon = localStorage.getItem("icon");
+    if (savedIcon) {
+      setIcon(savedIcon);
+    }
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ loginUser, mangeIcon, icon }}>
+    <AuthContext.Provider value={{ loginUser, signupUser, mangeIcon, icon }}>
       {props.children}
     </AuthContext.Provider>
   );

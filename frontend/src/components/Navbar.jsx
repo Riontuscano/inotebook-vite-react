@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import NotesDropdown from './Dropdown';
 import LoginDropdown from './LoginDropdown';
 
-const Navbar = () => {
+const Navbar = (props) => {
   const location = useLocation();
 
   return (
@@ -28,7 +28,7 @@ const Navbar = () => {
             </li>
           </ul>
           <form className="d-flex" role="search">
-          <LoginDropdown/>
+          <LoginDropdown showAlert={props.showAlert}/>
           </form>
         </div>
       </div>

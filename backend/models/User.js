@@ -14,6 +14,10 @@ const UserSchema = new Schema({
         type:String,
         required:true
     },
+    profilepic:{
+        type:String,
+        default:""
+    },
     timeStamp:{
         type:Date,
         default:Date.now
