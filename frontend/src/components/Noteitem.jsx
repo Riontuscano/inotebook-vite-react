@@ -4,7 +4,7 @@ import NoteState from "../context/notes/notecontext";
 const Noteitem = (props) => {
   const context = useContext(NoteState);
   const { deleteNote, fetchOneNote } = context;
-  const { note, updateNote } = props;
+  const { note, updateNote , showAlert } = props;
   const inputTime = new Date(note.timeStamp);
 
   // State to manage which note is selected for deletion
@@ -30,6 +30,7 @@ const Noteitem = (props) => {
   const handleDelete = () => {
     if (selectedNoteId) {
       deleteNote(selectedNoteId); // Delete the selected note
+      showAlert("Note Deleted Successfully","success")
       setSelectedNoteId(null); // Clear the selected note ID after deletion
     }
   };
@@ -96,10 +97,10 @@ const Noteitem = (props) => {
             <i
               className="bx bx-trash"
               data-bs-toggle="modal"
-              data-bs-target={`#modal-${note._id}`} // Target the correct modal
+              data-bs-target={`#modal-${note._id}`} 
               onClick={(e) => {
-                e.stopPropagation(); // Prevent unwanted events
-                setSelectedNoteId(note._id); // Set the note ID for deletion
+                e.stopPropagation(); 
+                setSelectedNoteId(note._id); 
               }}
             ></i>
           </div>

@@ -16,7 +16,7 @@ const NoteState = (props) => {
     const response = await fetch(`${host}/api/notes/fetchallnotes`, {
       method: "GET",
       headers: {
-        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc1ZWQ5NzU2MDNlNzBiMDI5ZjMwMGY1In0sImlhdCI6MTczNDI2OTMyMH0.HPA3DodG2tBL8Ij5h6sCmrm6Hk-F-K4RbCgjeiS0FlM",
+        "auth-token":localStorage.getItem("authtoken"),
       },
     })
       .catch((error) => {
@@ -30,7 +30,7 @@ const NoteState = (props) => {
     const response = await fetch(`${host}/api/notes/fetchnote/${updateId}`, {
       method: "GET",
       headers: {
-        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc1ZWQ5NzU2MDNlNzBiMDI5ZjMwMGY1In0sImlhdCI6MTczNDI2OTMyMH0.HPA3DodG2tBL8Ij5h6sCmrm6Hk-F-K4RbCgjeiS0FlM",
+        "auth-token":localStorage.getItem("authtoken"),
         },
         })
         .catch((error) => {
@@ -46,7 +46,7 @@ const NoteState = (props) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc1ZWQ5NzU2MDNlNzBiMDI5ZjMwMGY1In0sImlhdCI6MTczNDI2OTMyMH0.HPA3DodG2tBL8Ij5h6sCmrm6Hk-F-K4RbCgjeiS0FlM",
+        "auth-token":localStorage.getItem("authtoken"),
       },
       body: JSON.stringify(formData),
     })
@@ -63,7 +63,6 @@ const NoteState = (props) => {
 
      
     //for client
-  
     const note = await response.json()
     
     setNotes(noteinitial.concat(note));
@@ -76,7 +75,7 @@ const NoteState = (props) => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc1ZWQ5NzU2MDNlNzBiMDI5ZjMwMGY1In0sImlhdCI6MTczNDI2OTMyMH0.HPA3DodG2tBL8Ij5h6sCmrm6Hk-F-K4RbCgjeiS0FlM",
+        "auth-token":localStorage.getItem("authtoken"),
       },
       body: JSON.stringify({title,description,tag}),
     })
@@ -107,7 +106,7 @@ const NoteState = (props) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc1ZWQ5NzU2MDNlNzBiMDI5ZjMwMGY1In0sImlhdCI6MTczNDI2OTMyMH0.HPA3DodG2tBL8Ij5h6sCmrm6Hk-F-K4RbCgjeiS0FlM",
+        "auth-token":localStorage.getItem("authtoken"),
       },
     })
       .catch((error) => {

@@ -26,14 +26,12 @@ const NotesDropdown = () => {
     padding:' 8px 0',
     zIndex: '1000',
     marginTop: '8px',
-    color:{}
   }
-  
   return (
     <li className="nav-item" 
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}>
-      <Link className={`nav-link ${location.pathname === "/notes" ? "active" : ""}`} to="/notes">
+      <Link className={`nav-link ${location.pathname === "/notes" || location.pathname === "/notes/create" || location.pathname === "/notes/archive"  ? "active" : ""}`} to="/notes">
         Notes
       </Link>
       {isOpen && (

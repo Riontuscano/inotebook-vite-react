@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import '../css/LoginDropdown.css';
 import AuthContext from '../context/auth/authcontext.jsx';
-import { Link } from 'react-router-dom';
+import { Link , useLocation ,useNavigate } from 'react-router-dom';
 
 const ProfileDropdown = (props) => {
+  const Navigate = useNavigate()
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const timeoutRef = useRef();
@@ -108,6 +110,9 @@ const ProfileDropdown = (props) => {
                     localStorage.removeItem("icon"); 
                     localStorage.removeItem("authtoken");
                     localStorage.removeItem("name");
+                    if(location.pathname === "/notes" || location.pathname === "/notes/create" || location.pathname === "/notes/archive"){
+                      Navigate('/')
+                    }
                   }}
                   className="dropdown-item"
                 >

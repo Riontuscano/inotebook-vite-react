@@ -105,7 +105,7 @@ const Notes = (props) => {
         <h2>Your Notes</h2>
         {notes.length === 0 && <h2>No notes yet! Create one above.😘 </h2>}
         {notes.map((note) => (
-          <NoteItem key={note._id} updateNote={() => updateNote(note)} note={note} />
+          <NoteItem key={note._id} updateNote={() => updateNote(note)} showAlert={props.showAlert} note={note} />
         ))}
       </div>
     </>

@@ -29,8 +29,8 @@ const AuthState = (props) => {
 
       if (data.success) {
         mangeIcon(data.icon);
-        localStorage.setItem("authtoken", data.authtoken); // Save token to localStorage
-        localStorage.setItem("name", data.uname); // Save token to localStorage
+        localStorage.setItem("authtoken", data.authtoken);
+        localStorage.setItem("name", data.uname); 
         return true;
       } else {
         alert(data.error || "Invalid credentials");

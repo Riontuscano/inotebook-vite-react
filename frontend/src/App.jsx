@@ -32,8 +32,8 @@ const App = () => {
     <AuthState>
     <NoteState>
     <Router>
-      <Navbar showAlert={showAlert} />
       <Alert alert={alert}/>
+      <Navbar showAlert={showAlert} />
       <div className="container mt-4">
         <Routes>
           <Route path="/" element={<Home />} />

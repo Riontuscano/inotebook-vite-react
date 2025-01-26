@@ -88,7 +88,7 @@ const AuthForm = (props) => {
       const { email, password, userName, confirmPassword, gender } = formData;
 
       if (confirmPassword !== password) {
-        props.showAlert("Passwords doesn't match","danger")
+        props.showAlert("Passwords doesn't match","warning")
         return;
       }
 
