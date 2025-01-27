@@ -32,7 +32,7 @@ const Navbar = (props) => {
             </li>
           </ul>
           <form className="d-flex" role="search">
-          <BotMessageSquare />
+          {/* <BotMessageSquare/> */}
           <LoginDropdown showAlert={props.showAlert}/>
           </form>
         </div>

@@ -10,7 +10,6 @@ const ProfileDropdown = (props) => {
   const dropdownRef = useRef(null);
   const timeoutRef = useRef();
   const { icon, mangeIcon } = useContext(AuthContext);
-
   const handleMouseEnter = () => {
     clearTimeout(timeoutRef.current);
     setIsOpen(true);
