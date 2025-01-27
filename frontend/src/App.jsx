@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route,Navigate } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
@@ -17,6 +17,7 @@ import Alert  from './components/Alert';
 
 const App = () => {
   const [alert,setAlert] = useState(null);
+  
   const showAlert=(message,type)=>{
     setAlert({
       msg:message,
@@ -36,13 +37,13 @@ const App = () => {
       <Navbar showAlert={showAlert} />
       <div className="container mt-4">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={localStorage.getItem('authtoken') ? <Home showAlert={showAlert} /> : <Authway showAlert={showAlert} /> } />
           <Route path="/about" element={<About />} />
           <Route path="/notes" element={<Notes showAlert={showAlert}/>} />
           <Route path="/notes/create" element={<Addnote showAlert={showAlert}/>} />
           <Route path="/notes/archive" element={<Archivenote showAlert={showAlert}/>} />
           <Route path="/contact" element={<Contact />} />
-          <Route path='/Authway' element={<Authway showAlert={showAlert}/>}/>
+          <Route path='/Authway' element={ !localStorage.getItem('authtoken') ? <Authway showAlert={showAlert}/>: <Navigate to="/" /> } />
         </Routes>
       </div>
         <Footer/>
