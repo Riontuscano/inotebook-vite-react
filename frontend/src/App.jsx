@@ -38,7 +38,7 @@ const App = () => {
       <div className="container mt-4">
         <Routes>
           <Route path="/" element={localStorage.getItem('authtoken') ? <Home showAlert={showAlert} /> : <Authway showAlert={showAlert} /> } />
-          <Route path="/about" element={<About />} />
+          {/* <Route path="/about" element={<About />} /> */}
           <Route path="/notes" element={<Notes showAlert={showAlert}/>} />
           <Route path="/notes/create" element={<Addnote showAlert={showAlert}/>} />
           <Route path="/notes/archive" element={<Archivenote showAlert={showAlert}/>} />

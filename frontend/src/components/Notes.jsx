@@ -1,19 +1,27 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import NoteState from '../context/notes/notecontext'
-import NoteItem from './Noteitem'
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import NoteState from '../context/notes/notecontext';
+import NoteItem from './Noteitem';
+import NoteCardSkeleton from './NoteCardSkeleton';
 
 const Notes = (props) => {
   const [formData, setFormData] = useState({
-    id:"",
+    id: "",
     title: "",
     description: "",
     tag: "personal",
   });
 
-  const { notes, fetchNotes, editNote } = useContext(NoteState); 
-
+  const { notes, fetchNotes, editNote } = useContext(NoteState);
+  const [loading, setLoading] = useState(true); 
+  const pstyle = {
+    fontSize: "2rem"
+  };
+  
   useEffect(() => {
     fetchNotes();
+    const timer = setTimeout(() => setLoading(false), 3000); 
+
+    return () => clearTimeout(timer);
   }, []);
 
   const ref = useRef(null);
@@ -21,11 +29,11 @@ const Notes = (props) => {
   const updateNote = (note) => {
     ref.current.click();
     setFormData({
-      id:note._id,
+      id: note._id,
       title: note.title,
       description: note.description,
       tag: note.tag,
-    }); 
+    });
   };
 
   const handleChange = (e) => {
@@ -38,20 +46,38 @@ const Notes = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.showAlert("Note Updated Successfully","success")
-    editNote(formData.id,formData.title,formData.description,formData.tag); 
+    props.showAlert("Note Updated Successfully", "success");
+    editNote(formData.id, formData.title, formData.description, formData.tag);
   };
 
   return (
     <>
-      <button type="button" ref={ref} className="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      </button>
-      <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <button
+        type="button"
+        ref={ref}
+        className="btn"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      ></button>
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">Edit Note</h1>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <h1 className="modal-title fs-5" id="exampleModalLabel">
+                Edit Note
+              </h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
             <div className="modal-body">
               <form>
@@ -94,19 +120,43 @@ const Notes = (props) => {
               </form>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button disabled={formData.title.length < 5 || formData.description.length < 5} type="submit" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleSubmit}>Save changes</button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                disabled={formData.title.length < 5 || formData.description.length < 5}
+                type="submit"
+                className="btn btn-primary"
+                data-bs-dismiss="modal"
+                onClick={handleSubmit}
+              >
+                Save changes
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className='row m-3'>
+      <div className="row m-3">
         <h2>Your Notes</h2>
-        {notes.length === 0 && <h2>No notes yet! Create one above.😘 </h2>}
-        {notes.map((note) => (
-          <NoteItem key={note._id} updateNote={() => updateNote(note)} showAlert={props.showAlert} note={note} />
-        ))}
+        {loading ? (
+         <NoteCardSkeleton/>
+        ) : notes.length === 0 ? (
+         <center><p style={pstyle}>No notes to display 😔</p></center>
+        ) : (
+          notes.map((note) => (
+            <NoteItem
+              key={note._id}
+              updateNote={() => updateNote(note)}
+              showAlert={props.showAlert}
+              note={note}
+            />
+          ))
+        )}
       </div>
     </>
   );
